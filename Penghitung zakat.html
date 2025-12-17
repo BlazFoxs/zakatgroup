@@ -11,8 +11,8 @@
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
-            --primary-color: #047857;
-            --secondary-color: #fbbf24;
+            --primary-color: #047857; /* Hijau Emerald */
+            --secondary-color: #fbbf24; /* Emas (Tombol Bayar) */
             --dark-color: #1f2937;
             --light-color: #f3f4f6;
             --white: #ffffff;
@@ -139,12 +139,43 @@
             border-color: var(--primary-color); outline: none;
             box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
         }
+        
+        /* Tombol Hitung (Hijau) */
         .full-width {
             width: 100%; margin-top: 1rem; cursor: pointer;
             background-color: var(--primary-color); color: var(--white);
             padding: 1rem; border-radius: 8px; font-weight: 600; border: none;
+            font-size: 1rem;
         }
         .full-width:hover { opacity: 0.9; }
+
+        /* --- TOMBOL BAYAR SEGERA (BARU) --- */
+        .btn-pay {
+            background-color: var(--secondary-color); /* Warna Kuning Emas */
+            color: var(--dark-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100%;
+            
+            /* Default sembunyi, muncul via Javascript */
+            display: none; 
+            
+            box-shadow: 0 4px 6px rgba(251, 191, 36, 0.3);
+            transition: var(--transition);
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-pay:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5);
+            background-color: #f59e0b;
+        }
 
         .alert-info {
             background-color: #eff6ff; border-left: 4px solid #3b82f6;
@@ -157,6 +188,7 @@
             border: 1px solid #bbf7d0; border-radius: 8px; text-align: center;
         }
         .nominal { display: block; font-size: 2rem; font-weight: 700; color: var(--dark-color); margin: 0.5rem 0; }
+        .detail-info { font-size: 0.9rem; color: #4b5563; margin-top: 5px; }
 
         /* FOOTER */
         footer {
@@ -182,7 +214,7 @@
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Beranda</a></li>
-            <li><a href="kalkulator.html" style="color: var(--primary-color); font-weight: 700;">Hitung Zakat</a></li>
+            <li><a href="#" style="color: var(--primary-color); font-weight: 700;">Hitung Zakat</a></li>
             <li><a href="index.html#about">Tentang Metode</a></li>
         </ul>
         <a href="#" class="btn-login" onclick="alert('Fitur Login Admin')">
@@ -213,19 +245,24 @@
                     <input type="number" id="fitrah_harga" placeholder="Contoh: 15000" value="15000">
                     <small>Standar zakat fitrah adalah 2,5 Kg beras per orang.</small>
                 </div>
+                
                 <button class="full-width" onclick="hitungZakatFitrah()">Hitung Zakat Fitrah</button>
                 
                 <div class="result-box" id="hasil_fitrah" style="display: none;">
                     <h4>Total Zakat Fitrah:</h4>
                     <span class="nominal" id="nominal_fitrah">Rp 0</span>
                     <p>Setara dengan <span id="berat_beras">0</span> Kg Beras</p>
+
+                    <button class="btn-pay" id="btn_bayar_fitrah" onclick="prosesBayar('Zakat Fitrah')">
+                        <i class="fas fa-wallet"></i> Bayarkan Segera
+                    </button>
                 </div>
             </div>
 
             <div id="maal" class="tab-content">
                 <div class="alert-info">
                     <i class="fas fa-info-circle"></i> 
-                    Nisab Zakat Maal setara dengan 85 gram emas. Jika total harta bersih mencapai nilai ini dan sudah berlalu 1 tahun (Haul), maka wajib dikeluarkan 2,5%.
+                    Nisab Zakat Maal setara dengan 85 gram emas. <strong>Harta (Uang + Aset) akan dijumlahkan</strong>. Jika totalnya mencapai nisab, maka wajib dikeluarkan 2,5%.
                 </div>
                 
                 <div class="form-grid">
@@ -253,6 +290,14 @@
                     <h4>Hasil Perhitungan:</h4>
                     <p id="status_nisab" style="font-weight: bold; margin-bottom: 5px;"></p>
                     <span class="nominal" id="nominal_maal">Rp 0</span>
+                    <div class="detail-info">
+                        <p>Total Harta Bersih: <span id="info_total_harta">-</span></p>
+                        <p>Batas Nisab (85g Emas): <span id="info_nisab">-</span></p>
+                    </div>
+
+                    <button class="btn-pay" id="btn_bayar_maal" onclick="prosesBayar('Zakat Maal')">
+                        <i class="fas fa-wallet"></i> Bayarkan Segera
+                    </button>
                 </div>
             </div>
         </div>
@@ -292,11 +337,17 @@
             evt.currentTarget.className += " active";
         }
 
+        // Fungsi Simulasi Bayar
+        function prosesBayar(jenisZakat) {
+            alert("Anda akan diarahkan ke halaman pembayaran untuk " + jenisZakat + ".");
+        }
+
         // Hitung Zakat Fitrah
         function hitungZakatFitrah() {
             let jiwa = document.getElementById('fitrah_jiwa').value;
             let harga = document.getElementById('fitrah_harga').value;
-            if (jiwa == "" || jiwa <= 0) { alert("Mohon masukkan jumlah orang."); return; }
+            
+            if (jiwa == "" || jiwa <= 0) { alert("Mohon masukkan jumlah orang (minimal 1)."); return; }
             
             let totalBayar = jiwa * 2.5 * harga;
             let totalBeras = jiwa * 2.5;
@@ -304,35 +355,52 @@
             document.getElementById('hasil_fitrah').style.display = 'block';
             document.getElementById('nominal_fitrah').innerText = formatRupiah(totalBayar);
             document.getElementById('berat_beras').innerText = totalBeras;
+
+            // Tampilkan tombol bayar
+            document.getElementById('btn_bayar_fitrah').style.display = 'flex';
         }
 
-        // Hitung Zakat Maal
+        // Hitung Zakat Maal (Logika Baru)
         function hitungZakatMaal() {
             let hargaEmas = parseFloat(document.getElementById('harga_emas').value) || 0;
             let uang = parseFloat(document.getElementById('harta_uang').value) || 0;
             let aset = parseFloat(document.getElementById('harta_emas').value) || 0;
             let hutang = parseFloat(document.getElementById('hutang').value) || 0;
 
+            // Hitung Total: (Uang + Aset) - Hutang
             let totalHarta = (uang + aset) - hutang;
             let nisab = 85 * hargaEmas;
 
             let resultBox = document.getElementById('hasil_maal');
             let statusNisab = document.getElementById('status_nisab');
             let nominalMaal = document.getElementById('nominal_maal');
+            let infoTotal = document.getElementById('info_total_harta');
+            let infoNisab = document.getElementById('info_nisab');
+            let btnBayar = document.getElementById('btn_bayar_maal');
 
             resultBox.style.display = 'block';
+            infoTotal.innerText = formatRupiah(totalHarta);
+            infoNisab.innerText = formatRupiah(nisab);
 
             if (totalHarta >= nisab) {
+                // WAJIB ZAKAT
                 let zakat = totalHarta * 0.025;
                 resultBox.style.backgroundColor = "#f0fdf4";
                 resultBox.style.borderColor = "#bbf7d0";
                 statusNisab.innerHTML = `<span style="color: green"><i class="fas fa-check-circle"></i> Wajib Zakat</span>`;
                 nominalMaal.innerText = formatRupiah(zakat);
+                
+                // Munculkan Tombol Bayar
+                btnBayar.style.display = 'flex';
             } else {
+                // TIDAK WAJIB
                 resultBox.style.backgroundColor = "#fff1f2";
                 resultBox.style.borderColor = "#fecdd3";
                 statusNisab.innerHTML = `<span style="color: #e11d48"><i class="fas fa-times-circle"></i> Belum Wajib</span> (Belum capai nisab)`;
                 nominalMaal.innerText = "Rp 0";
+                
+                // Sembunyikan Tombol Bayar
+                btnBayar.style.display = 'none';
             }
         }
     </script>
