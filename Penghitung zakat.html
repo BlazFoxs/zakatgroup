@@ -8,7 +8,169 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="stylesheet" href="css/Style-Hitung-zakat.css">
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-color: #047857;
+            --secondary-color: #fbbf24;
+            --dark-color: #1f2937;
+            --light-color: #f3f4f6;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links li a:hover { color: var(--primary-color); }
+
+        .btn-login {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 2px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        .btn-login:hover { background-color: transparent; color: var(--primary-color); }
+
+        /* HEADER HALAMAN */
+        .page-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 120px 5% 40px;
+            text-align: center;
+            margin-bottom: -30px;
+        }
+
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* CALCULATOR SECTION */
+        .calculator-section {
+            padding: 3rem 5% 5rem;
+            background-color: var(--light-color);
+            min-height: 60vh;
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        /* Tabs */
+        .calc-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input {
+            width: 100%; padding: 0.8rem; border: 1px solid #d1d5db;
+            border-radius: 8px; font-size: 1rem; transition: var(--transition);
+        }
+        .form-group input:focus {
+            border-color: var(--primary-color); outline: none;
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
+        }
+        .full-width {
+            width: 100%; margin-top: 1rem; cursor: pointer;
+            background-color: var(--primary-color); color: var(--white);
+            padding: 1rem; border-radius: 8px; font-weight: 600; border: none;
+        }
+        .full-width:hover { opacity: 0.9; }
+
+        .alert-info {
+            background-color: #eff6ff; border-left: 4px solid #3b82f6;
+            padding: 1rem; margin-bottom: 1.5rem; color: #1e40af; font-size: 0.9rem;
+        }
+
+        /* Result Box */
+        .result-box {
+            margin-top: 2rem; padding: 1.5rem; background-color: #f0fdf4;
+            border: 1px solid #bbf7d0; border-radius: 8px; text-align: center;
+        }
+        .nominal { display: block; font-size: 2rem; font-weight: 700; color: var(--dark-color); margin: 0.5rem 0; }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--white);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
@@ -20,7 +182,7 @@
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Beranda</a></li>
-            <li><a href="kalkulator.html" class="active-link">Hitung Zakat</a></li>
+            <li><a href="kalkulator.html" style="color: var(--primary-color); font-weight: 700;">Hitung Zakat</a></li>
             <li><a href="index.html#about">Tentang Metode</a></li>
         </ul>
         <a href="#" class="btn-login" onclick="alert('Fitur Login Admin')">
@@ -51,7 +213,7 @@
                     <input type="number" id="fitrah_harga" placeholder="Contoh: 15000" value="15000">
                     <small>Standar zakat fitrah adalah 2,5 Kg beras per orang.</small>
                 </div>
-                <button class="btn-primary full-width" onclick="hitungZakatFitrah()">Hitung Zakat Fitrah</button>
+                <button class="full-width" onclick="hitungZakatFitrah()">Hitung Zakat Fitrah</button>
                 
                 <div class="result-box" id="hasil_fitrah" style="display: none;">
                     <h4>Total Zakat Fitrah:</h4>
@@ -85,7 +247,7 @@
                     </div>
                 </div>
 
-                <button class="btn-primary full-width" onclick="hitungZakatMaal()">Hitung Zakat Maal</button>
+                <button class="full-width" onclick="hitungZakatMaal()">Hitung Zakat Maal</button>
 
                 <div class="result-box" id="hasil_maal" style="display: none;">
                     <h4>Hasil Perhitungan:</h4>
@@ -104,7 +266,75 @@
         </div>
     </footer>
 
-    <script src="Javascript/Javascript Hitung Zakat.js"></script>
+    <script>
+        // Format Rupiah
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
 
+        // Fungsi Ganti Tab
+        function openTab(evt, tabName) {
+            let tabContent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+                tabContent[i].classList.remove("active");
+            }
+            let tabLinks = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.className += " active";
+        }
+
+        // Hitung Zakat Fitrah
+        function hitungZakatFitrah() {
+            let jiwa = document.getElementById('fitrah_jiwa').value;
+            let harga = document.getElementById('fitrah_harga').value;
+            if (jiwa == "" || jiwa <= 0) { alert("Mohon masukkan jumlah orang."); return; }
+            
+            let totalBayar = jiwa * 2.5 * harga;
+            let totalBeras = jiwa * 2.5;
+
+            document.getElementById('hasil_fitrah').style.display = 'block';
+            document.getElementById('nominal_fitrah').innerText = formatRupiah(totalBayar);
+            document.getElementById('berat_beras').innerText = totalBeras;
+        }
+
+        // Hitung Zakat Maal
+        function hitungZakatMaal() {
+            let hargaEmas = parseFloat(document.getElementById('harga_emas').value) || 0;
+            let uang = parseFloat(document.getElementById('harta_uang').value) || 0;
+            let aset = parseFloat(document.getElementById('harta_emas').value) || 0;
+            let hutang = parseFloat(document.getElementById('hutang').value) || 0;
+
+            let totalHarta = (uang + aset) - hutang;
+            let nisab = 85 * hargaEmas;
+
+            let resultBox = document.getElementById('hasil_maal');
+            let statusNisab = document.getElementById('status_nisab');
+            let nominalMaal = document.getElementById('nominal_maal');
+
+            resultBox.style.display = 'block';
+
+            if (totalHarta >= nisab) {
+                let zakat = totalHarta * 0.025;
+                resultBox.style.backgroundColor = "#f0fdf4";
+                resultBox.style.borderColor = "#bbf7d0";
+                statusNisab.innerHTML = `<span style="color: green"><i class="fas fa-check-circle"></i> Wajib Zakat</span>`;
+                nominalMaal.innerText = formatRupiah(zakat);
+            } else {
+                resultBox.style.backgroundColor = "#fff1f2";
+                resultBox.style.borderColor = "#fecdd3";
+                statusNisab.innerHTML = `<span style="color: #e11d48"><i class="fas fa-times-circle"></i> Belum Wajib</span> (Belum capai nisab)`;
+                nominalMaal.innerText = "Rp 0";
+            }
+        }
+    </script>
 </body>
 </html>
